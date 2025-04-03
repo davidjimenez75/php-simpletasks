@@ -212,7 +212,32 @@ $projects = getDirectories(__DIR__);
             const html = document.documentElement;
             const themeToggle = document.getElementById('themeToggle');
             const themeIcon = document.getElementById('themeIcon');
-            
+
+            // Retrieve stored theme from localStorage
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme) {
+                html.setAttribute('data-bs-theme', storedTheme);
+                if (storedTheme === 'dark') {
+                    themeIcon.classList.remove('bi-moon-fill');
+                    themeIcon.classList.add('bi-sun-fill');
+                }
+            }
+
+            // Toggle theme function with storage
+            function toggleTheme() {
+                const currentTheme = html.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                if (newTheme === 'dark') {
+                    themeIcon.classList.remove('bi-moon-fill');
+                    themeIcon.classList.add('bi-sun-fill');
+                } else {
+                    themeIcon.classList.remove('bi-sun-fill');
+                    themeIcon.classList.add('bi-moon-fill');
+                }
+            }
+
             // Check if it's night time (between 8 PM and 9 AM)
             function isNightTime() {
                 const hour = new Date().getHours();
@@ -224,19 +249,6 @@ $projects = getDirectories(__DIR__);
                 html.setAttribute('data-bs-theme', 'dark');
                 themeIcon.classList.remove('bi-moon-fill');
                 themeIcon.classList.add('bi-sun-fill');
-            }
-            
-            // Toggle theme function
-            function toggleTheme() {
-                if (html.getAttribute('data-bs-theme') === 'dark') {
-                    html.setAttribute('data-bs-theme', 'light');
-                    themeIcon.classList.remove('bi-sun-fill');
-                    themeIcon.classList.add('bi-moon-fill');
-                } else {
-                    html.setAttribute('data-bs-theme', 'dark');
-                    themeIcon.classList.remove('bi-moon-fill');
-                    themeIcon.classList.add('bi-sun-fill');
-                }
             }
             
             // Add click event to theme toggle button

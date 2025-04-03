@@ -1,16 +1,15 @@
-/.phpunit.result.cache
-/.ra-aid
-/CLAUDE.md
-/claude
-/claude-code
+# Ignore all directories at the root level
+/*/
+
+# Common PHP exclusions
+/vendor/
 /composer.lock
-/go
-/gtd.dj75.net
-/phpunit.xml
-/python
-/rust
-/src
-/tests
-/u25.dj75.net
-/ubuntu25
-/vendor
+/phpunit.result.cache
+
+# Keep these directories (add lines if you want to track specific directories)
+# !/important-directory/
+
+# Ignore specific files
+CLAUDE.md
+.phpunit.result.cache
+phpunit.xml

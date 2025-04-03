@@ -16,6 +16,7 @@ function getDirectories(string $path): array {
         if ($item !== '.' && 
             $item !== '..' && 
             !str_starts_with($item, '.') && 
+            $item !== 'tests' && 
             $item !== 'vendor' && 
             is_dir($fullPath)) {
             $dirs[] = $item;
@@ -75,6 +76,7 @@ $projects = getDirectories(__DIR__);
             color: #2c3e50;
             font-size: 1.1em;
             white-space: pre-line;
+            line-height: 6px;
         }
         .task-count {
             color: #666;

@@ -6,6 +6,9 @@ declare(strict_types=1);
  * Lists all first-level directories as projects and their subdirectories as tasks
  */
 
+// Version of the script
+define('VERSION', '2025.04.07.1306');
+
 // Function to get directories excluding hidden ones and vendor
 function getDirectories(string $path): array {
     $dirs = [];
@@ -166,7 +169,7 @@ $projects = getDirectories(__DIR__);
         }
     </style>
 </head>
-<body class="container py-4">
+<body class="container-fluid py-4">
     <!-- Theme toggle button -->
     <button class="theme-toggle" id="themeToggle">
         <i class="bi bi-moon-fill" id="themeIcon"></i>

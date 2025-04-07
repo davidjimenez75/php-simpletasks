@@ -3,13 +3,22 @@ declare(strict_types=1);
 
 /**
  * Project and Task Lister
- * Lists all first-level directories as projects and their subdirectories as tasks
+ * Lists all first-level directories as projects and their subdirectories as tasks in a markdown format.
+ * Copy and paste the website content into a markdown file.
+ * 
+ * Compatible with PHP 7.4 and above.
  */
 
 // Version of the script
-define('VERSION', '2025.04.07.1306');
+define('VERSION', '2025.04.07.1319');
 
-// Function to get directories excluding hidden ones and vendor
+// Function to get directories excluding hidden ones and vendor (PHP7 compatible)
+/**
+ * Get directories in a given path.
+ *
+ * @param string $path The path to scan for directories.
+ * @return array An array of directory names.
+ */
 function getDirectories(string $path): array {
     $dirs = [];
     $items = scandir($path);
@@ -18,8 +27,10 @@ function getDirectories(string $path): array {
         $fullPath = $path . DIRECTORY_SEPARATOR . $item;
         if ($item !== '.' && 
             $item !== '..' && 
-            !str_starts_with($item, '.') && 
+            !(substr($item, 0, 1) === '.') && 
             $item !== 'tests' && 
+            $item !== 'vendor' && 
+            $item !== '$RECYCLE.BIN' && 
             $item !== 'vendor' && 
             is_dir($fullPath)) {
             $dirs[] = $item;

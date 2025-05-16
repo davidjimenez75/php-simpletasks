@@ -61,7 +61,7 @@ $projects = getDirectories(__DIR__);
             line-height: 1.3;
             margin: 0;
             padding: 10px;
-            background-color: #f5f5f5;
+            background-color: #aaaaaa;
             font-size: 0.9em;
         }
         h1 {
@@ -73,9 +73,9 @@ $projects = getDirectories(__DIR__);
             font-size: 1.4em;
         }
         .project {
-            background-color: white;
+            background-color: #cacaca;
             border-radius: 3px;
-            padding: 8px 10px;
+            padding: 8px 4px;
             margin-bottom: 8px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
@@ -84,13 +84,15 @@ $projects = getDirectories(__DIR__);
             justify-content: space-between;
             align-items: center;
             margin-bottom: 5px;
+            text-transform: uppercase;
+
         }
         .project h2 {
             margin: 0;
-            color: #2c3e50;
-            font-size: 1.1em;
+            font-size: 1em;
             white-space: pre-line;
-            line-height: 6px;
+            line-height: 4px;
+            font-weight: bolder;            
         }
         .task-count {
             color: #666;
@@ -102,7 +104,7 @@ $projects = getDirectories(__DIR__);
             margin-left: 15px;
         }
         .task {
-            background-color: #f9f9f9;
+            background-color: #dadada;
             border-left: 3px solid #3498db;
             padding: 4px 8px;
             margin-bottom: 4px;
@@ -155,6 +157,11 @@ $projects = getDirectories(__DIR__);
         html[data-bs-theme="dark"] .no-tasks {
             color: #adb5bd;
         }
+
+        .invisible {
+            font-size:0px;
+            color: transparent;
+        }
         
         /* Theme toggle button */
         .theme-toggle {
@@ -201,7 +208,7 @@ $projects = getDirectories(__DIR__);
             <div class="project">
                 <div class="project-header">
                     <h2>
-## <?= htmlspecialchars($project) ?> <span class="task-count">(<?= count($tasks) ?>)</span>
+<span class="invisible">##</span> <?= htmlspecialchars($project) ?> <span class="task-count<?php if(count($tasks) == 0) echo 'invisible';?>"><?php if (count($tasks) > 0) echo '('.count($tasks),')'; ?></span>
 
 </h2>
                 </div>

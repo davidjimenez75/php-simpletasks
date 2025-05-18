@@ -393,56 +393,72 @@ $projects = getDirectories(__DIR__);
             const themeToggle = document.getElementById('themeToggle');
             const themeIcon = document.getElementById('themeIcon');
 
-            // Retrieve stored theme from localStorage
-            const storedTheme = localStorage.getItem('theme');
-            if (storedTheme) {
-                html.setAttribute('data-bs-theme', storedTheme);
-                if (storedTheme === 'dark') {
+            // Helper function to apply theme and update icon
+            function applyTheme(theme) {
+                if (!html || !themeIcon) { // Basic safety check
+                    // console.error('applyTheme: html or themeIcon element is missing.');
+                    return;
+                }
+
+                html.setAttribute('data-bs-theme', theme);
+                if (theme === 'dark') {
                     themeIcon.classList.remove('bi-moon-fill');
                     themeIcon.classList.add('bi-sun-fill');
-                } else {
+                } else { // Default to light theme appearance (icon and attribute)
                     themeIcon.classList.remove('bi-sun-fill');
                     themeIcon.classList.add('bi-moon-fill');
                 }
             }
 
-            // Toggle theme function with storage
-            function toggleTheme() {
-                const currentTheme = html.getAttribute('data-bs-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                html.setAttribute('data-bs-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                if (newTheme === 'dark') {
-                    themeIcon.classList.remove('bi-moon-fill');
-                    themeIcon.classList.add('bi-sun-fill');
-                } else {
-                    themeIcon.classList.remove('bi-sun-fill');
-                    themeIcon.classList.add('bi-moon-fill');
-                }
-            }
-
-            // Check if it's night time (between 8 PM and 9 AM)
+            // Helper function to check if it's night time
             function isNightTime() {
                 const hour = new Date().getHours();
-                return hour >= 20 || hour < 9;
+                return hour >= 20 || hour < 9; // 8 PM to 8:59 AM
             }
-            
-            // Set initial theme based on time and stored preference
-            if (!storedTheme) { // Only apply auto-theme if no preference is stored
+
+            // Determine and apply initial theme
+            let determinedTheme = 'light'; // Default to light theme
+            try {
+                const storedTheme = localStorage.getItem('theme');
+                if (storedTheme === 'dark' || storedTheme === 'light') {
+                    determinedTheme = storedTheme;
+                } else { // No valid stored theme, or an invalid one
+                    if (isNightTime()) {
+                        determinedTheme = 'dark';
+                    }
+                    // If not night and no valid stored theme, it remains 'light' (our default)
+                    // This automatically determined theme is not saved to localStorage initially
+                }
+            } catch (e) {
+                console.error("Could not access localStorage for theme: ", e);
+                // Fallback to time-based if localStorage fails
                 if (isNightTime()) {
-                    html.setAttribute('data-bs-theme', 'dark');
-                    themeIcon.classList.remove('bi-moon-fill');
-                    themeIcon.classList.add('bi-sun-fill');
-                    // localStorage.setItem('theme', 'dark'); // Optionally store this initial auto-theme
-                } else {
-                    html.setAttribute('data-bs-theme', 'light');
-                    themeIcon.classList.remove('bi-sun-fill');
-                    themeIcon.classList.add('bi-moon-fill');
+                    determinedTheme = 'dark';
+                }
+            }
+            applyTheme(determinedTheme);
+
+            // Toggle theme function
+            function toggleThemeOnClick() {
+                if (!html) { // Basic safety check
+                    // console.error('toggleThemeOnClick: html element is missing.');
+                    return;
+                }
+                const currentTheme = html.getAttribute('data-bs-theme');
+                const newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+                applyTheme(newTheme);
+                try {
+                    localStorage.setItem('theme', newTheme);
+                } catch (e) {
+                    console.error("Could not save theme to localStorage: ", e);
                 }
             }
             
-            // Add click event to theme toggle button
-            themeToggle.addEventListener('click', toggleTheme);
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleThemeOnClick);
+            } else {
+                // console.error('Theme toggle button (themeToggle) not found.');
+            }
 
             // Collapsible project sections
             const projectCollapseElements = document.querySelectorAll('.project-tasks-container.collapse');
@@ -457,7 +473,11 @@ $projects = getDirectories(__DIR__);
 
                 // Event listener for when a section is shown
                 collapseEl.addEventListener('show.bs.collapse', function () {
-                    localStorage.setItem(\`projectState_\${collapseId}\`, 'expanded');
+                    try {
+                        localStorage.setItem(`projectState_${collapseId}`, 'expanded');
+                    } catch (e) {
+                        console.error('Could not save project state to localStorage: ', e);
+                    }
                     if (icon) {
                         icon.classList.remove('collapsed');
                     }
@@ -465,32 +485,38 @@ $projects = getDirectories(__DIR__);
 
                 // Event listener for when a section is hidden
                 collapseEl.addEventListener('hide.bs.collapse', function () {
-                    localStorage.setItem(\`projectState_\${collapseId}\`, 'collapsed');
+                    try {
+                        localStorage.setItem(`projectState_${collapseId}`, 'collapsed');
+                    } catch (e) {
+                        console.error('Could not save project state to localStorage: ', e);
+                    }
                     if (icon) {
                         icon.classList.add('collapsed');
                     }
                 });
 
                 // --- Initialize state based on localStorage ---
-                const savedState = localStorage.getItem(\`projectState_\${collapseId}\`);
+                let savedState = null;
+                try {
+                    savedState = localStorage.getItem(`projectState_${collapseId}`);
+                } catch (e) {
+                    console.error('Could not access localStorage for project state: ', e);
+                }
 
                 if (savedState === 'collapsed') {
                     if (collapseEl.classList.contains('show')) {
-                        bsCollapse.hide(); // Triggers 'hide.bs.collapse' event
+                        bsCollapse.hide(); 
                     } else {
-                        // Already hidden, ensure icon is correct (event might not have fired if already hidden)
                         if (icon) icon.classList.add('collapsed');
                     }
                 } else if (savedState === 'expanded') {
                     if (!collapseEl.classList.contains('show')) {
-                        bsCollapse.show(); // Triggers 'show.bs.collapse' event
+                        bsCollapse.show(); 
                     } else {
-                        // Already shown, ensure icon is correct
                         if (icon) icon.classList.remove('collapsed');
                     }
                 } else {
                     // No saved state, rely on default HTML 'show' class
-                    // Icon state should match initial 'show' status
                     if (icon) {
                         if (collapseEl.classList.contains('show')) {
                             icon.classList.remove('collapsed');

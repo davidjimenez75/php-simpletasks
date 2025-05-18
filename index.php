@@ -391,6 +391,11 @@ $projects = getDirectories(__DIR__);
         .theme-toggle i {
             font-size: 1.5rem;
         }
+
+        /* Style for active filter in dropdown */
+        .dropdown-item.active-filter {
+            font-weight: bold !important; /* Added !important to ensure override */
+        }
     </style>
 </head>
 <body class="container-fluid py-4">
@@ -769,6 +774,19 @@ $projects = getDirectories(__DIR__);
             const topRightMenuButton = document.getElementById('topRightMenuButton');
 
             function applyStatusFilter(selectedStatus) {
+                // Remove active class from all filter items
+                filterStatusItems.forEach(item => {
+                    item.classList.remove('active-filter');
+                    // item.style.fontWeight = 'normal'; // Alternative: direct style manipulation
+                });
+
+                // Add active class to the selected filter item
+                const selectedFilterItem = document.querySelector(`.filter-status-item[data-status="${selectedStatus}"]`);
+                if (selectedFilterItem) {
+                    selectedFilterItem.classList.add('active-filter');
+                    // selectedFilterItem.style.fontWeight = 'bold'; // Alternative
+                }
+
                 taskItems.forEach(task => {
                     const taskStatusClass = Array.from(task.classList).find(cls => cls.startsWith('status-'));
                     const taskStatus = taskStatusClass ? taskStatusClass.replace('status-', '') : '';
@@ -804,10 +822,19 @@ $projects = getDirectories(__DIR__);
             try {
                 const savedFilter = localStorage.getItem('activeStatusFilter');
                 if (savedFilter) {
-                    applyStatusFilter(savedFilter);
+                    applyStatusFilter(savedFilter); // This will now also set the bold style
+                } else {
+                    // If no saved filter, make "All Statuses" bold by default and apply it
+                    applyStatusFilter('all'); 
                 }
             } catch (e) {
                 console.error('Could not load status filter from localStorage: ', e);
+                // Fallback if localStorage fails, make "All Statuses" bold
+                const allStatusesItem = document.querySelector('.filter-status-item[data-status="all"]');
+                if (allStatusesItem) {
+                    allStatusesItem.classList.add('active-filter');
+                    // allStatusesItem.style.fontWeight = 'bold'; // Alternative
+                }
             }
 
             // --- FEATURE--004: Clickable Task Header for README Toggle ---

@@ -75,10 +75,10 @@ The application then renders this structure in a user-friendly web view, providi
         status=WIP
         start=2025-05-10--100000
         end=2025-05-12--180000
-        duration_minutes=120 
+        time=120 
         tags=frontend, critical, refactor
         ```
-    -   Supported fields: `id`, `status`, `start` (YYYY-MM-DD--HHMMSS), `end` (YYYY-MM-DD--HHMMSS), `duration_minutes`, `tags` (comma-separated).
+    -   Supported fields: `id`, `status`, `start` (YYYY-MM-DD--HHMMSS), `end` (YYYY-MM-DD--HHMMSS), `time` (in minutes), `tags` (comma-separated).
 
 3.  **Add Task Details (Optional):**
     -   Create a `README.md` file inside any task directory to provide detailed descriptions, notes, or checklists. This content will be viewable directly in the UI.

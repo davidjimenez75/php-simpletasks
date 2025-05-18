@@ -343,7 +343,7 @@ $projects = getDirectories(__DIR__);
         /* Theme toggle button */
         .theme-toggle {
             position: fixed;
-            top: 15px;
+            bottom: 15px; /* Changed from top to bottom */
             right: 15px;
             z-index: 1000;
             width: 45px;
@@ -369,6 +369,35 @@ $projects = getDirectories(__DIR__);
     <button class="theme-toggle" id="themeToggle">
         <i class="bi bi-moon-fill" id="themeIcon"></i>
     </button>
+
+    <!-- New Top-Right Menu -->
+    <div class="dropdown position-fixed top-0 end-0 p-3" style="z-index: 1001;">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="topRightMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-list"></i> Menu
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="topRightMenuButton">
+            <li><h6 class="dropdown-header">Filter by Status</h6></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="all">All Statuses</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="todo">To Do</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="wip">WIP</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="done">Done</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="finished">Finished</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="today">Today</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="next">Next</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="urgent">Urgent</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="rock">Rock</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="bug">Bug</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="feature">Feature</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="review">Review</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="someday">Someday</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="waiting">Waiting</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="later">Later</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><h6 class="dropdown-header">Coming Soon</h6></li>
+            <li><a class="dropdown-item disabled" href="#">Reports</a></li>
+            <li><a class="dropdown-item disabled" href="#">Export Options</a></li>
+        </ul>
+    </div>
     
     <h1># <?= $_SERVER['HTTP_HOST'] ?? 'Projects' ?> (<?= date('Y-m-d') ?>)</h1>
     
@@ -666,6 +695,54 @@ $projects = getDirectories(__DIR__);
                     }
                 }
             });
+
+            // New Top-Right Menu Logic
+            const filterStatusItems = document.querySelectorAll('.filter-status-item');
+            const taskItems = document.querySelectorAll('.gh-item'); // Assuming tasks have class 'gh-item'
+            const topRightMenuButton = document.getElementById('topRightMenuButton');
+
+            function applyStatusFilter(selectedStatus) {
+                taskItems.forEach(task => {
+                    const taskStatusClass = Array.from(task.classList).find(cls => cls.startsWith('status-'));
+                    const taskStatus = taskStatusClass ? taskStatusClass.replace('status-', '') : '';
+
+                    if (selectedStatus === 'all' || taskStatus === selectedStatus) {
+                        task.style.display = ''; // Show task
+                    } else {
+                        task.style.display = 'none'; // Hide task
+                    }
+                });
+                // Update menu button text to show active filter
+                if (topRightMenuButton) {
+                    const selectedStatusText = selectedStatus === 'all' ? 'Menu' : `Filter: ${selectedStatus.toUpperCase()}`;
+                    topRightMenuButton.innerHTML = `<i class="bi bi-list"></i> ${selectedStatusText}`;
+                }
+                // Save filter to localStorage
+                try {
+                    localStorage.setItem('activeStatusFilter', selectedStatus);
+                } catch (e) {
+                    console.error('Could not save status filter to localStorage: ', e);
+                }
+            }
+
+            filterStatusItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const status = this.getAttribute('data-status');
+                    applyStatusFilter(status);
+                });
+            });
+
+            // Load and apply saved filter on page load
+            try {
+                const savedFilter = localStorage.getItem('activeStatusFilter');
+                if (savedFilter) {
+                    applyStatusFilter(savedFilter);
+                }
+            } catch (e) {
+                console.error('Could not load status filter from localStorage: ', e);
+            }
+
         });
     </script>
 </body>

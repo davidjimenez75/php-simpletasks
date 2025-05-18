@@ -9,8 +9,11 @@ declare(strict_types=1);
  * Compatible with PHP 7.4 and above.
  */
 
+// Include Composer's autoloader
+require_once __DIR__ . '/vendor/autoload.php';
+
 // Version of the script
-define('VERSION', '2025.05.18.1000');
+define('VERSION', '2025.05.18.1500');
 
 // Function to get directories excluding hidden ones and vendor (PHP7 compatible)
 /**
@@ -41,6 +44,9 @@ function getDirectories(string $path): array {
 }
 
 $projects = getDirectories(__DIR__);
+
+// Instantiate Parsedown
+$Parsedown = new Parsedown();
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
@@ -71,6 +77,22 @@ $projects = getDirectories(__DIR__);
             margin-top: 0;
             margin-bottom: 10px;
             font-size: 1.4em;
+        }
+        h2 {
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        h3 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        h4 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
         }
         .project {
             background-color: #cacaca;
@@ -288,7 +310,15 @@ $projects = getDirectories(__DIR__);
         html[data-bs-theme="dark"] .project h2 {
             color: #e9ecef;
         }
-        
+
+        html[data-bs-theme="dark"] .project h3 {
+            color: #e9ecef;
+        }
+
+        html[data-bs-theme="dark"] .project h4 {
+            color: #e9ecef;
+        }
+
         html[data-bs-theme="dark"] .gh-item {
             background-color: #2d333b; /* Darker item background */
             box-shadow: none; /* Remove shadow if any from project */
@@ -488,7 +518,6 @@ $projects = getDirectories(__DIR__);
                             if (file_exists($taskReadmePath)) {
                                 $hasReadme = true;
                                 $readmeContent = file_get_contents($taskReadmePath);
-                                // For now, we will display raw markdown. A library like Parsedown would be needed for HTML rendering.
                             }
                             $taskSlug = preg_replace('/[^a-zA-Z0-9_-]+/', '-', strtolower($task));
                             $readmeCollapseId = 'readme-collapse-' . $projectSlug . '-' . $taskSlug;
@@ -604,13 +633,14 @@ $projects = getDirectories(__DIR__);
 
                                     <?php if ($hasReadme): ?>
                                     <div class="collapse task-readme-content" id="<?= htmlspecialchars($readmeCollapseId) ?>">
-                                        <pre><?= htmlspecialchars($readmeContent ?? 'No content found in README.md') ?></pre>
-                                        <?php /* Note: For full Markdown rendering (including HTML and task lists), 
-                                               a PHP Markdown parser like Parsedown would be needed here. 
-                                               Example: 
-                                               $parser = new Parsedown(); 
-                                               echo $parser->text(htmlspecialchars($readmeContent)); 
-                                        */ ?>
+                                        <?php 
+                                            // Use Parsedown to render README.md content
+                                            if ($readmeContent !== null) {
+                                                echo $Parsedown->text($readmeContent); 
+                                            } else {
+                                                echo '<p>No content found in README.md</p>';
+                                            }
+                                        ?>
                                     </div>
                                     <?php endif; ?>
                                 </div>

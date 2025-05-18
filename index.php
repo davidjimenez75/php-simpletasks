@@ -323,7 +323,13 @@ $projects = getDirectories(__DIR__);
                             }
                             ?>
                             <div class="task <?= htmlspecialchars($taskMeta['status_class']) ?>">
-                                - [_] <?= htmlspecialchars($task) ?> <span class="task-status-label">[<?= $taskMeta['status_display'] ?>]</span>
+                                <?php 
+                                $taskPrefix = "- [_]";
+                                if (in_array(strtoupper($rawStatusForLogic), ['DONE', 'FINISHED'])) {
+                                    $taskPrefix = "- [x]";
+                                }
+                                ?>
+                                <?= $taskPrefix ?> <?= htmlspecialchars($task) ?> <span class="task-status-label">[<?= $taskMeta['status_display'] ?>]</span>
                                 
                                 <?php if ($taskMeta['start_display'] || $taskMeta['end_display'] || $taskMeta['duration_minutes'] !== null || !empty($taskMeta['tags_array'])): ?>
                                 <div class="task-meta-container">

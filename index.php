@@ -139,6 +139,7 @@ $projects = getDirectories(__DIR__);
         /* Status Specific Styles - Light Theme */
         .task.status-todo { border-left-color: #7f8c8d; background-color: #ecf0f1; }
         .task.status-done { border-left-color: #2ecc71; background-color: #e8f8f5; text-decoration: line-through; }
+        .task.status-finished { border-left-color: #2ecc71; background-color: #e8f8f5; text-decoration: line-through; }
         .task.status-next { border-left-color: #3498db; background-color: #ebf5fb; }
         .task.status-wip { border-left-color: #f1c40f; background-color: #fef9e7; }
         .task.status-today { border-left-color: #e74c3c; background-color: #fdedec; font-weight: bold; }
@@ -183,6 +184,7 @@ $projects = getDirectories(__DIR__);
         /* Status Specific Styles - Dark Theme */
         html[data-bs-theme="dark"] .task.status-todo { border-left-color: #95a5a6; background-color: #34495e; }
         html[data-bs-theme="dark"] .task.status-done { border-left-color: #27ae60; background-color: #1e4620; text-decoration: line-through; }
+        html[data-bs-theme="dark"] .task.status-finished { border-left-color: #27ae60; background-color: #1e4620; text-decoration: line-through; }        
         html[data-bs-theme="dark"] .task.status-next { border-left-color: #2980b9; background-color: #1f3a93; }
         html[data-bs-theme="dark"] .task.status-wip { border-left-color: #f39c12; background-color: #5a4807; }
         html[data-bs-theme="dark"] .task.status-today { border-left-color: #c0392b; background-color: #78281f; font-weight: bold; }

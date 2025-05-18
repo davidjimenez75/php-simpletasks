@@ -363,7 +363,7 @@ $projects = getDirectories(__DIR__);
                                 <div class="task-name">
                                     <?= $taskPrefix ?> <?= htmlspecialchars($task) ?>
                                     <?php if ($taskMeta['id']): ?>
-                                        (<?= $taskMeta['id'] ?>)
+                                        (#<?= $taskMeta['id'] ?>)
                                     <?php endif; ?>
                                     <span class="task-status-label">[<?= $taskMeta['status_display'] ?>]</span>
                                 </div>

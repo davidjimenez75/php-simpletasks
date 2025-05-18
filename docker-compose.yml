@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  php:
+    image: php:8-apache # Uses the latest available PHP 8.x with Apache
+    volumes:
+      - .:/var/www/html # Mounts the current repository into /var/www/html
+    # Apache within this container runs as www-data by default and serves from /var/www/html.
+    # No ports are exposed for Apache as per the request focusing on Samba.
+
+  samba:
+    image: dperson/samba
+    ports:
+      - "137:137/udp"
+      - "138:138/udp"
+      - "139:139/tcp"
+      - "445:445/tcp"
+    volumes:
+      # Mounts the current repository to /var/www/html inside the Samba container.
+      # This is the same host directory mounted by the php service.
+      - .:/var/www/html
+    # Command to configure Samba:
+    # -u "samba_user;samba_password" # Defines a Samba user and password.
+    #    IMPORTANT: Change 'devuser' and 'devpass' to secure credentials.
+    # -s "<share_name>;</path_in_container>[;browseable;readonly;guest_ok;valid_users;;write_list;comment;extra_smb_options...]"
+    #    share_name: Name of the share (e.g., 'repo_share').
+    #    path_in_container: Path to share from within the Samba container (e.g., '/var/www/html').
+    #    browseable: 'yes' or 'no'.
+    #    readonly: 'yes' for read-only, 'no' for read-write.
+    #    guest_ok: 'yes' to allow guest access, 'no' to require authentication.
+    #    valid_users: Comma-separated list of users allowed to access.
+    #    write_list: Comma-separated list of users allowed to write.
+    #    comment: Description of the share.
+    #    extra_smb_options: Additional smb.conf options for the share, e.g., 'force user=www-data'.
+    #       'force user=www-data' and 'force group=www-data' ensure that file operations
+    #       are performed as the 'www-data' user and group, effectively making files
+    #       owned by www-data:www-data as requested.
+    command: >
+      -u "devuser;devpass"
+      -s "tasks;/var/www/html;yes;no;no;devuser;;devuser;Shared Repository;force user=www-data;force group=www-data"
+    restart: unless-stopped
+
+# To use this Docker Compose file:
+# 1. Save it as 'docker-compose.yml' in the root of your repository.
+# 2. IMPORTANT: Change the Samba credentials "devuser;devpass" in the command section above.
+# 3. Run 'docker-compose up -d' in the terminal from the repository root.
+# 4. Access the Samba share from your network using the host machine's IP address
+#    and the share name 'tasks' with the credentials you set.
+#    Example: \\<host_ip>\tasks

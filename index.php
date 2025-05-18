@@ -90,9 +90,15 @@ $projects = getDirectories(__DIR__);
         .project h2 {
             margin: 0;
             font-size: 1em;
-            white-space: pre-line;
-            line-height: 4px;
+            /* white-space: pre-line; */ /* Replaced for single-line display */
+            white-space: nowrap;      /* Ensures project name and count are on one line */
+            overflow: hidden;         /* Hides overflow if content is too long */
+            text-overflow: ellipsis;  /* Adds \'...\' for truncated text */
+            /* line-height: 4px; */  /* Replaced with normal line height */
+            line-height: normal;      /* Allows proper text rendering */
             font-weight: bolder;            
+            flex-grow: 1; /* Allows h2 to take available space next to the icon */
+            margin-right: 5px; /* Add some space between h2 and the icon */
         }
         .task-count {
             color: #666;

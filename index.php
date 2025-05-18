@@ -326,6 +326,34 @@ $projects = getDirectories(__DIR__);
         html[data-bs-theme="dark"] .gh-label-status.feature { background-color: #1e4a35; color: #8be0b5; border-color: #2a664a; }
         html[data-bs-theme="dark"] .gh-label-status.review { background-color: #412754; color: #d3b9ed; border-color: #573470; }
 
+        .task-readme-toggle {
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-left: 8px;
+            color: #0d6efd; /* Bootstrap primary blue */
+        }
+        html[data-bs-theme="dark"] .task-readme-toggle {
+            color: #58a6ff; /* Lighter blue for dark mode */
+        }
+        .task-readme-content {
+            margin-top: 8px;
+            padding: 10px;
+            background-color: #f8f9fa; /* Light background for content */
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            font-size: 0.9em;
+        }
+        html[data-bs-theme="dark"] .task-readme-content {
+            background-color: #2c3137; /* Darker background for content */
+            border-color: #495057;
+            color: #ced4da;
+        }
+        .task-readme-content pre {
+            white-space: pre-wrap; /* Wrap long lines in pre */
+            word-break: break-all; /* Break long words if necessary */
+            margin-bottom: 0; /* Remove default pre margin */
+        }
+
         html[data-bs-theme="dark"] .no-projects {
             background-color: #332701;
             border-left: 3px solid #ffc107;
@@ -444,6 +472,18 @@ $projects = getDirectories(__DIR__);
                             ];
                             $rawStatusForLogic = 'TODO'; // For direct comparison if needed
 
+                            // Check for README.md
+                            $taskReadmePath = $projectPath . DIRECTORY_SEPARATOR . $task . DIRECTORY_SEPARATOR . 'README.md';
+                            $readmeContent = null;
+                            $hasReadme = false;
+                            if (file_exists($taskReadmePath)) {
+                                $hasReadme = true;
+                                $readmeContent = file_get_contents($taskReadmePath);
+                                // For now, we will display raw markdown. A library like Parsedown would be needed for HTML rendering.
+                            }
+                            $taskSlug = preg_replace('/[^a-zA-Z0-9_-]+/', '-', strtolower($task));
+                            $readmeCollapseId = 'readme-collapse-' . $projectSlug . '-' . $taskSlug;
+
                             if (file_exists($taskIniPath)) {
                                 $iniData = parse_ini_file($taskIniPath);
                                 if ($iniData) {
@@ -527,6 +567,12 @@ $projects = getDirectories(__DIR__);
                                         <?php foreach ($taskMeta['tags_array'] as $tag): ?>
                                             <span class="gh-label gh-label-tag"><?= htmlspecialchars($tag) ?></span>
                                         <?php endforeach; ?>
+
+                                        <?php if ($hasReadme): ?>
+                                            <a class="task-readme-toggle" data-bs-toggle="collapse" href="#<?= htmlspecialchars($readmeCollapseId) ?>" role="button" aria-expanded="false" aria-controls="<?= htmlspecialchars($readmeCollapseId) ?>">
+                                                <i class="bi bi-info-circle"></i> README.md
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
                                     
                                     <?php if ($taskMeta['start_display'] || $taskMeta['end_display'] || $taskMeta['duration_minutes'] !== null): ?>
@@ -544,6 +590,18 @@ $projects = getDirectories(__DIR__);
                                         }
                                         echo implode(' <span class="text-muted">&bull;</span> ', $metaParts);
                                         ?>
+                                    </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($hasReadme): ?>
+                                    <div class="collapse task-readme-content" id="<?= htmlspecialchars($readmeCollapseId) ?>">
+                                        <pre><?= htmlspecialchars($readmeContent ?? 'No content found in README.md') ?></pre>
+                                        <?php /* Note: For full Markdown rendering (including HTML and task lists), 
+                                               a PHP Markdown parser like Parsedown would be needed here. 
+                                               Example: 
+                                               $parser = new Parsedown(); 
+                                               echo $parser->text(htmlspecialchars($readmeContent)); 
+                                        */ ?>
                                     </div>
                                     <?php endif; ?>
                                 </div>

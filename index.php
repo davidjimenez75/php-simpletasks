@@ -119,55 +119,156 @@ $projects = getDirectories(__DIR__);
         .tasks {
             margin-left: 15px;
         }
-        .task {
-            background-color: #dadada;
+        /* .task -> .gh-item */
+        .gh-item {
+            display: flex; /* New: for icon and main content layout */
+            align-items: flex-start; /* Align icon and content to the top */
+            /* background-color: #dadada; */ /* Old: general task background, removed for GitHub style */
             border-left: 3px solid #3498db; /* Default border, will be overridden by status */
-            padding: 4px 8px;
-            margin-bottom: 4px;
-            border-radius: 0 3px 3px 0;
+            padding: 8px 10px; /* Adjusted padding */
+            margin-bottom: 8px; /* Increased margin for separation */
+            border-radius: 6px; /* GitHub-like rounded corners */
             font-size: 0.9em;
-        }
-        .task-meta-container {
-            margin-top: 5px;
-            padding-left: 10px;
-        }
-        .task-meta { 
-            font-size: 0.8em; 
-            color: #555; 
-            margin-top: 3px; 
-        }
-        .task-meta span + span {
-            margin-left: 8px;
-        }
-        .task-tags { 
-            font-size: 0.8em; 
-            color: #555; 
-            margin-top: 3px; 
-        }
-        .task-status-label {
-            font-size: 0.8em;
-            font-weight: normal; /* Overrides bold if task itself is bold */
-            margin-left: 5px;
-            color: #777;
-            text-transform: uppercase;
+            background-color: #fff; /* Light theme default background */
         }
 
-        /* Status Specific Styles - Light Theme */
-        .task.status-todo { border-left-color: #7f8c8d; background-color: #ecf0f1; }
-        .task.status-done { border-left-color: #2ecc71; background-color: #e8f8f5; text-decoration: line-through; }
-        .task.status-finished { border-left-color: #2ecc71; background-color: #e8f8f5; text-decoration: line-through; }
-        .task.status-next { border-left-color: #3498db; background-color: #ebf5fb; }
-        .task.status-wip { border-left-color: #f1c40f; background-color: #fef9e7; }
-        .task.status-today { border-left-color: #e74c3c; background-color: #fdedec; font-weight: bold; }
-        .task.status-someday { border-left-color: #9b59b6; background-color: #f5eef8; }
-        .task.status-waiting { border-left-color: #1abc9c; background-color: #e8f6f3; }
-        .task.status-rock { border-left-color: #e67e22; background-color: #fdf2e9; font-weight: bold; }
-        .task.status-urgent { border-left-color: #c0392b; background-color: #f9ebea; font-weight: bold; }
-        .task.status-bug { border-left-color: #d35400; background-color: #fbeee6; }
-        .task.status-later { border-left-color: #bdc3c7; background-color: #f8f9f9; }
-        .task.status-feature { border-left-color: #27ae60; background-color: #e9f7ef; }
-        .task.status-review { border-left-color: #8e44ad; background-color: #f4ecf7; }
+        .gh-item-icon-col {
+            margin-right: 8px;
+            padding-top: 2px; /* Align icon nicely with text */
+            font-size: 1.2em; /* Icon size */
+            flex-shrink: 0; /* Prevent icon column from shrinking */
+        }
+
+        .gh-item-main-col {
+            flex-grow: 1;
+            min-width: 0; /* Prevents overflow issues with flex items */
+        }
+
+        .gh-item-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* Allow labels to wrap */
+            margin-bottom: 4px;
+        }
+
+        .gh-item-title {
+            font-weight: 600; /* Bolder title */
+            font-size: 1.05em;
+            color: #0969da; /* GitHub-like link color for title */
+            margin-right: 8px;
+            word-break: break-word; /* Break long task names */
+        }
+        html[data-bs-theme="dark"] .gh-item-title {
+            color: #58a6ff;
+        }
+
+        .gh-item-id {
+            font-size: 0.9em;
+            color: #57606a;
+            margin-right: 8px;
+        }
+        html[data-bs-theme="dark"] .gh-item-id {
+            color: #8b949e;
+        }
+
+        .gh-label {
+            padding: 0.15em 0.5em;
+            font-size: 0.75em;
+            font-weight: 500;
+            line-height: 1.5;
+            border-radius: 2em; /* Pill-shaped labels */
+            margin-right: 4px;
+            margin-bottom: 4px; /* For wrapping */
+            display: inline-block;
+            border: 1px solid transparent;
+        }
+
+        /* Base for status labels (will be colored by specific status) */
+        .gh-label-status {
+            /* Colors will come from specific status classes */
+        }
+
+        /* Base for tag labels */
+        .gh-label-tag {
+            background-color: #f1f8ff; /* Light blue background for tags */
+            color: #0969da; /* Dark blue text */
+            border-color: #c8e1ff;
+        }
+        html[data-bs-theme="dark"] .gh-label-tag {
+            background-color: #16263a;
+            color: #58a6ff;
+            border-color: #2f4c77;
+        }
         
+        .gh-item-meta {
+            font-size: 0.8em; 
+            color: #57606a; 
+            margin-top: 3px; 
+        }
+        .gh-item-meta span + span {
+            margin-left: 8px;
+        }
+        html[data-bs-theme="dark"] .gh-item-meta { color: #8b949e; }
+
+
+        /* Remove old task-specific elements or adapt them */
+        .task-meta-container { /* No longer used directly, content moved */
+            /* margin-top: 5px; */
+            /* padding-left: 10px; */
+        }
+        .task-meta { /* Replaced by .gh-item-meta */
+            /* font-size: 0.8em;  */
+            /* color: #555;  */
+            /* margin-top: 3px;  */
+        }
+        .task-tags { /* Replaced by .gh-label-tag */
+            /* font-size: 0.8em;  */
+            /* color: #555;  */
+            /* margin-top: 3px;  */
+        }
+        .task-status-label { /* Replaced by .gh-label-status */
+            /* font-size: 0.8em; */
+            /* font-weight: normal; */
+            /* margin-left: 5px; */
+            /* color: #777; */
+            /* text-transform: uppercase; */
+        }
+        .task-name { /* Styling moved to .gh-item-title and .gh-item-id */
+        }
+
+
+        /* Status Specific Styles - Light Theme */
+        .gh-item.status-todo { border-left-color: #7f8c8d; }
+        .gh-item.status-done { border-left-color: #2ecc71; text-decoration: none; }
+        .gh-item.status-finished { border-left-color: #2ecc71; text-decoration: none; }
+        .gh-item.status-next { border-left-color: #3498db; }
+        .gh-item.status-wip { border-left-color: #f1c40f; }
+        .gh-item.status-today { border-left-color: #e74c3c; font-weight: normal; }
+        .gh-item.status-someday { border-left-color: #9b59b6; }
+        .gh-item.status-waiting { border-left-color: #1abc9c; }
+        .gh-item.status-rock { border-left-color: #e67e22; font-weight: normal; }
+        .gh-item.status-urgent { border-left-color: #c0392b; font-weight: normal; }
+        .gh-item.status-bug { border-left-color: #d35400; }
+        .gh-item.status-later { border-left-color: #bdc3c7; }
+        .gh-item.status-feature { border-left-color: #27ae60; }
+        .gh-item.status-review { border-left-color: #8e44ad; }
+        
+        /* Status Label Specific Colors - Light Theme */
+        .gh-label-status.todo { background-color: #e0e0e0; color: #333; border-color: #ccc; }
+        .gh-label-status.done, .gh-label-status.finished { background-color: #d1f7d6; color: #10692c; border-color: #a2e8b3; }
+        .gh-label-status.next { background-color: #cfe2f3; color: #2a5296; border-color: #b0cdee; }
+        .gh-label-status.wip { background-color: #fff2cc; color: #795500; border-color: #ffe599; }
+        .gh-label-status.today { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; font-weight: bold; }
+        .gh-label-status.someday { background-color: #e8dff5; color: #5e397a; border-color: #d9c8ee; }
+        .gh-label-status.waiting { background-color: #d4f5f0; color: #1b6d5e; border-color: #b0e6dc; }
+        .gh-label-status.rock { background-color: #fce2d0; color: #8c4d15; border-color: #f9cba7; font-weight: bold; }
+        .gh-label-status.urgent { background-color: #fdd8d4; color: #7f231c; border-color: #fab9b3; font-weight: bold; }
+        .gh-label-status.bug { background-color: #fddfc9; color: #853d00; border-color: #fbc79f; }
+        .gh-label-status.later { background-color: #e6e9eb; color: #495057; border-color: #d3d9df; }
+        .gh-label-status.feature { background-color: #d0f0e0; color: #1a6c43; border-color: #a7e2c3; }
+        .gh-label-status.review { background-color: #e9d8f4; color: #592c73; border-color: #d8c0ea; }
+
+
         /* Dark mode styles */
         html[data-bs-theme="dark"] body {
             background-color: #212529;
@@ -188,30 +289,42 @@ $projects = getDirectories(__DIR__);
             color: #e9ecef;
         }
         
-        html[data-bs-theme="dark"] .task {
-            background-color: #2b3035; /* Default dark bg */
-            border-left: 3px solid #0d6efd; /* Default dark border, will be overridden */
+        html[data-bs-theme="dark"] .gh-item {
+            background-color: #2d333b; /* Darker item background */
+            box-shadow: none; /* Remove shadow if any from project */
         }
 
-        html[data-bs-theme="dark"] .task-meta { color: #bbb; }
-        html[data-bs-theme="dark"] .task-tags { color: #bbb; }
-        html[data-bs-theme="dark"] .task-status-label { color: #aaa; }
-
         /* Status Specific Styles - Dark Theme */
-        html[data-bs-theme="dark"] .task.status-todo { border-left-color: #95a5a6; background-color: #34495e; }
-        html[data-bs-theme="dark"] .task.status-done { border-left-color: #27ae60; background-color: #1e4620; text-decoration: line-through; }
-        html[data-bs-theme="dark"] .task.status-finished { border-left-color: #27ae60; background-color: #1e4620; text-decoration: line-through; }        
-        html[data-bs-theme="dark"] .task.status-next { border-left-color: #2980b9; background-color: #1f3a93; }
-        html[data-bs-theme="dark"] .task.status-wip { border-left-color: #f39c12; background-color: #5a4807; }
-        html[data-bs-theme="dark"] .task.status-today { border-left-color: #c0392b; background-color: #78281f; font-weight: bold; }
-        html[data-bs-theme="dark"] .task.status-someday { border-left-color: #8e44ad; background-color: #512e5f; }
-        html[data-bs-theme="dark"] .task.status-waiting { border-left-color: #16a085; background-color: #0e6251; }
-        html[data-bs-theme="dark"] .task.status-rock { border-left-color: #d35400; background-color: #7e2f0c; font-weight: bold; }
-        html[data-bs-theme="dark"] .task.status-urgent { border-left-color: #a93226; background-color: #641e16; font-weight: bold; }
-        html[data-bs-theme="dark"] .task.status-bug { border-left-color: #b94900; background-color: #6e2c00; }
-        html[data-bs-theme="dark"] .task.status-later { border-left-color: #a1a7ab; background-color: #3e4444; }
-        html[data-bs-theme="dark"] .task.status-feature { border-left-color: #229954; background-color: #196f3d; }
-        html[data-bs-theme="dark"] .task.status-review { border-left-color: #7d3c98; background-color: #4a235a; }
+        html[data-bs-theme="dark"] .gh-item.status-todo { border-left-color: #95a5a6; }
+        html[data-bs-theme="dark"] .gh-item.status-done { border-left-color: #27ae60; text-decoration: none; }
+        html[data-bs-theme="dark"] .gh-item.status-finished { border-left-color: #27ae60; text-decoration: none; }        
+        html[data-bs-theme="dark"] .gh-item.status-next { border-left-color: #2980b9; }
+        html[data-bs-theme="dark"] .gh-item.status-wip { border-left-color: #f39c12; }
+        html[data-bs-theme="dark"] .gh-item.status-today { border-left-color: #c0392b; font-weight: normal; }
+        html[data-bs-theme="dark"] .gh-item.status-someday { border-left-color: #8e44ad; }
+        html[data-bs-theme="dark"] .gh-item.status-waiting { border-left-color: #16a085; }
+        html[data-bs-theme="dark"] .gh-item.status-rock { border-left-color: #d35400; font-weight: normal; }
+        html[data-bs-theme="dark"] .gh-item.status-urgent { border-left-color: #a93226; font-weight: normal; }
+        html[data-bs-theme="dark"] .gh-item.status-bug { border-left-color: #b94900; }
+        html[data-bs-theme="dark"] .gh-item.status-later { border-left-color: #a1a7ab; }
+        html[data-bs-theme="dark"] .gh-item.status-feature { border-left-color: #229954; }
+        html[data-bs-theme="dark"] .gh-item.status-review { border-left-color: #7d3c98; }
+
+        /* Status Label Specific Colors - Dark Theme */
+        html[data-bs-theme="dark"] .gh-label-status.todo { background-color: #484f58; color: #c9d1d9; border-color: #5a626c; }
+        html[data-bs-theme="dark"] .gh-label-status.done, 
+        html[data-bs-theme="dark"] .gh-label-status.finished { background-color: #203d2b; color: #84dab3; border-color: #2f5a40; }
+        html[data-bs-theme="dark"] .gh-label-status.next { background-color: #2c3e5c; color: #a8c5f2; border-color: #3b527c; }
+        html[data-bs-theme="dark"] .gh-label-status.wip { background-color: #4d3c11; color: #f0d691; border-color: #695218; }
+        html[data-bs-theme="dark"] .gh-label-status.today { background-color: #582a2f; color: #f2b8bd; border-color: #74383f; font-weight: bold; }
+        html[data-bs-theme="dark"] .gh-label-status.someday { background-color: #442c59; color: #d8c9f0; border-color: #5c3b75; }
+        html[data-bs-theme="dark"] .gh-label-status.waiting { background-color: #224c46; color: #93e0d1; border-color: #2d665c; }
+        html[data-bs-theme="dark"] .gh-label-status.rock { background-color: #5e3a1e; color: #f5c9a9; border-color: #7a4e26; font-weight: bold; }
+        html[data-bs-theme="dark"] .gh-label-status.urgent { background-color: #612925; color: #f7c1bc; border-color: #7d3630; font-weight: bold; }
+        html[data-bs-theme="dark"] .gh-label-status.bug { background-color: #5c350d; color: #f7c9a0; border-color: #784611; }
+        html[data-bs-theme="dark"] .gh-label-status.later { background-color: #494f55; color: #bdc6cf; border-color: #606870; }
+        html[data-bs-theme="dark"] .gh-label-status.feature { background-color: #1e4a35; color: #8be0b5; border-color: #2a664a; }
+        html[data-bs-theme="dark"] .gh-label-status.review { background-color: #412754; color: #d3b9ed; border-color: #573470; }
 
         html[data-bs-theme="dark"] .no-projects {
             background-color: #332701;
@@ -352,45 +465,54 @@ $projects = getDirectories(__DIR__);
                                     }
                                 }
                             }
-                            ?>
-                            <div class="task <?= htmlspecialchars($taskMeta['status_class']) ?>">
-                                <?php 
-                                $taskPrefix = "- [_]";
-                                if (in_array(strtoupper($rawStatusForLogic), ['DONE', 'FINISHED'])) {
-                                    $taskPrefix = "- [x]";
-                                }
-                                ?>
-                                <div class="task-name">
-                                    <?= $taskPrefix ?> <?= htmlspecialchars($task) ?>
-                                    <?php if ($taskMeta['id']): ?>
-                                        (#<?= $taskMeta['id'] ?>)
-                                    <?php endif; ?>
-                                    <span class="task-status-label">[<?= $taskMeta['status_display'] ?>]</span>
-                                </div>
-                                
-                                <?php if ($taskMeta['start_display'] || $taskMeta['end_display'] || $taskMeta['duration_minutes'] !== null || !empty($taskMeta['tags_array'])): ?>
-                                <div class="task-meta-container">
-                                    <?php if ($taskMeta['start_display'] || $taskMeta['end_display'] || $taskMeta['duration_minutes'] !== null): ?>
-                                    <div class="task-meta">
-                                        <?php if ($taskMeta['start_display']): ?>
-                                            <span>Start: <?= $taskMeta['start_display'] ?></span>
-                                        <?php endif; ?>
-                                        <?php if ($taskMeta['end_display']): ?>
-                                            <span>End: <?= $taskMeta['end_display'] ?></span>
-                                        <?php endif; ?>
-                                        <?php if ($taskMeta['duration_minutes'] !== null): ?>
-                                            <span>Time: <?= $taskMeta['duration_minutes'] ?> min</span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <?php endif; ?>
 
-                                    <?php if (!empty($taskMeta['tags_array'])): ?>
-                                    <div class="task-tags">
-                                        Tags: <?= implode(', ', $taskMeta['tags_array']) ?>
+                            // Determine icon based on status
+                            $taskIconHtml = '<i class="bi bi-record-circle"></i>'; // Default: open circle
+                            if (in_array(strtoupper($rawStatusForLogic), ['DONE', 'FINISHED'])) {
+                                $taskIconHtml = '<i class="bi bi-check-circle-fill text-success"></i>'; // Green check
+                            } elseif (in_array(strtoupper($rawStatusForLogic), ['WIP', 'TODAY', 'URGENT', 'ROCK'])) {
+                                $taskIconHtml = '<i class="bi bi-dot text-warning"></i>'; // Yellow dot for in-progress like
+                            }
+                            // TODO: Add more specific icons for bug, feature etc. later if desired
+                            ?>
+                            <div class="gh-item <?= htmlspecialchars($taskMeta['status_class']) ?>">
+                                <div class="gh-item-icon-col">
+                                    <?= $taskIconHtml ?>
+                                </div>
+                                <div class="gh-item-main-col">
+                                    <div class="gh-item-header">
+                                        <span class="gh-item-title"><?= htmlspecialchars($task) ?></span>
+                                        <?php if ($taskMeta['id']): ?>
+                                            <span class="gh-item-id">#<?= $taskMeta['id'] ?></span>
+                                        <?php endif; ?>
+                                        
+                                        <span class="gh-label gh-label-status <?= strtolower(htmlspecialchars(preg_replace('/[^a-zA-Z0-9_-]+/', '-', $rawStatusForLogic))) ?>">
+                                            <?= $taskMeta['status_display'] ?>
+                                        </span>
+
+                                        <?php foreach ($taskMeta['tags_array'] as $tag): ?>
+                                            <span class="gh-label gh-label-tag"><?= htmlspecialchars($tag) ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    
+                                    <?php if ($taskMeta['start_display'] || $taskMeta['end_display'] || $taskMeta['duration_minutes'] !== null): ?>
+                                    <div class="gh-item-meta">
+                                        <?php 
+                                        $metaParts = [];
+                                        if ($taskMeta['start_display']) {
+                                            $metaParts[] = 'Start: ' . $taskMeta['start_display'];
+                                        }
+                                        if ($taskMeta['end_display']) {
+                                            $metaParts[] = 'End: ' . $taskMeta['end_display'];
+                                        }
+                                        if ($taskMeta['duration_minutes'] !== null) {
+                                            $metaParts[] = 'Time: ' . $taskMeta['duration_minutes'] . ' min';
+                                        }
+                                        echo implode(' <span class="text-muted">&bull;</span> ', $metaParts);
+                                        ?>
                                     </div>
                                     <?php endif; ?>
                                 </div>
-                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>

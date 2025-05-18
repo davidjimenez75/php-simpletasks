@@ -3,14 +3,19 @@ declare(strict_types=1);
 
 /**
  * Project and Task Lister
- * Lists all first-level directories as projects and their subdirectories as tasks in a markdown format.
- * Copy and paste the website content into a markdown file.
- * 
- * Compatible with PHP 7.4 and above.
+ * Lists all first-level directories as projects and their subdirectories as tasks.
  */
 
-// Include Composer's autoloader
-require_once __DIR__ . '/vendor/autoload.php';
+// Conditionally load Parsedown
+$parsedownAvailable = false;
+$Parsedown = null;
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+    if (class_exists('Parsedown')) {
+        $Parsedown = new Parsedown();
+        $parsedownAvailable = true;
+    }
+}
 
 // Version of the script
 define('VERSION', '2025.05.18.1500');
@@ -44,9 +49,6 @@ function getDirectories(string $path): array {
 }
 
 $projects = getDirectories(__DIR__);
-
-// Instantiate Parsedown
-$Parsedown = new Parsedown();
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
@@ -634,9 +636,12 @@ $Parsedown = new Parsedown();
                                     <?php if ($hasReadme): ?>
                                     <div class="collapse task-readme-content" id="<?= htmlspecialchars($readmeCollapseId) ?>">
                                         <?php 
-                                            // Use Parsedown to render README.md content
                                             if ($readmeContent !== null) {
-                                                echo $Parsedown->text($readmeContent); 
+                                                if ($parsedownAvailable && $Parsedown) {
+                                                    echo $Parsedown->text($readmeContent); 
+                                                } else {
+                                                    echo '<pre>' . htmlspecialchars($readmeContent) . '</pre>';
+                                                }
                                             } else {
                                                 echo '<p>No content found in README.md</p>';
                                             }

@@ -100,6 +100,16 @@ $projects = getDirectories(__DIR__);
             font-weight: normal;
             margin-left: 6px;
         }
+        .project-toggle-icon {
+            cursor: pointer;
+            margin-right: 8px;
+            font-size: 0.9em; /* Adjust as needed */
+            transition: transform 0.2s ease-in-out;
+            display: inline-block; /* Ensures transform is applied correctly */
+        }
+        .project-toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
         .tasks {
             margin-left: 15px;
         }
@@ -252,16 +262,25 @@ $projects = getDirectories(__DIR__);
             <?php 
             $projectPath = __DIR__ . DIRECTORY_SEPARATOR . $project;
             $tasks = getDirectories($projectPath);
+            // Generate a slug for IDs
+            $projectSlug = preg_replace('/[^a-zA-Z0-9_-]+/', '-', strtolower($project));
+            $collapseId = 'project-collapse-' . $projectSlug; // Deterministic ID
             ?>
             <div class="project">
-                <div class="project-header">
+                <div class="project-header" 
+                     data-bs-toggle="collapse" 
+                     data-bs-target="#<?= htmlspecialchars($collapseId) ?>" 
+                     aria-expanded="true" 
+                     aria-controls="<?= htmlspecialchars($collapseId) ?>"
+                     style="cursor: pointer;">
                     <h2>
-<span class="invisible">##</span> <?= htmlspecialchars($project) ?> <span class="task-count<?php if(count($tasks) == 0) echo 'invisible';?>"><?php if (count($tasks) > 0) echo '('.count($tasks),')'; ?></span>
-
-</h2>
+                        <span class="invisible">##</span> <?= htmlspecialchars($project) ?> 
+                        <span class="task-count<?php if(count($tasks) == 0) echo ' invisible';?>"><?php if (count($tasks) > 0) echo '('.count($tasks),')'; ?></span>
+                    </h2>
+                    <i class="bi bi-chevron-down project-toggle-icon"></i>
                 </div>
                 
-                <div class="tasks" style="margin-top: 10px;">
+                <div id="<?= htmlspecialchars($collapseId) ?>" class="collapse show project-tasks-container tasks" style="margin-top: 10px;">
                     <?php if (!empty($tasks)): ?>
                         <?php foreach ($tasks as $task): ?>
                             <?php
@@ -356,6 +375,8 @@ $projects = getDirectories(__DIR__);
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="no-tasks" style="padding-left: 15px; font-style: italic; color: #666;">No tasks in this project.</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -379,6 +400,9 @@ $projects = getDirectories(__DIR__);
                 if (storedTheme === 'dark') {
                     themeIcon.classList.remove('bi-moon-fill');
                     themeIcon.classList.add('bi-sun-fill');
+                } else {
+                    themeIcon.classList.remove('bi-sun-fill');
+                    themeIcon.classList.add('bi-moon-fill');
                 }
             }
 
@@ -403,15 +427,79 @@ $projects = getDirectories(__DIR__);
                 return hour >= 20 || hour < 9;
             }
             
-            // Set initial theme based on time
-            if (isNightTime()) {
-                html.setAttribute('data-bs-theme', 'dark');
-                themeIcon.classList.remove('bi-moon-fill');
-                themeIcon.classList.add('bi-sun-fill');
+            // Set initial theme based on time and stored preference
+            if (!storedTheme) { // Only apply auto-theme if no preference is stored
+                if (isNightTime()) {
+                    html.setAttribute('data-bs-theme', 'dark');
+                    themeIcon.classList.remove('bi-moon-fill');
+                    themeIcon.classList.add('bi-sun-fill');
+                    // localStorage.setItem('theme', 'dark'); // Optionally store this initial auto-theme
+                } else {
+                    html.setAttribute('data-bs-theme', 'light');
+                    themeIcon.classList.remove('bi-sun-fill');
+                    themeIcon.classList.add('bi-moon-fill');
+                }
             }
             
             // Add click event to theme toggle button
             themeToggle.addEventListener('click', toggleTheme);
+
+            // Collapsible project sections
+            const projectCollapseElements = document.querySelectorAll('.project-tasks-container.collapse');
+
+            projectCollapseElements.forEach(function(collapseEl) {
+                const collapseId = collapseEl.id; // Deterministic ID from PHP
+                const projectHeader = collapseEl.closest('.project').querySelector('.project-header');
+                const icon = projectHeader.querySelector('.project-toggle-icon');
+
+                // Ensure Bootstrap Collapse instance is created
+                const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl, { toggle: false });
+
+                // Event listener for when a section is shown
+                collapseEl.addEventListener('show.bs.collapse', function () {
+                    localStorage.setItem(\`projectState_\${collapseId}\`, 'expanded');
+                    if (icon) {
+                        icon.classList.remove('collapsed');
+                    }
+                });
+
+                // Event listener for when a section is hidden
+                collapseEl.addEventListener('hide.bs.collapse', function () {
+                    localStorage.setItem(\`projectState_\${collapseId}\`, 'collapsed');
+                    if (icon) {
+                        icon.classList.add('collapsed');
+                    }
+                });
+
+                // --- Initialize state based on localStorage ---
+                const savedState = localStorage.getItem(\`projectState_\${collapseId}\`);
+
+                if (savedState === 'collapsed') {
+                    if (collapseEl.classList.contains('show')) {
+                        bsCollapse.hide(); // Triggers 'hide.bs.collapse' event
+                    } else {
+                        // Already hidden, ensure icon is correct (event might not have fired if already hidden)
+                        if (icon) icon.classList.add('collapsed');
+                    }
+                } else if (savedState === 'expanded') {
+                    if (!collapseEl.classList.contains('show')) {
+                        bsCollapse.show(); // Triggers 'show.bs.collapse' event
+                    } else {
+                        // Already shown, ensure icon is correct
+                        if (icon) icon.classList.remove('collapsed');
+                    }
+                } else {
+                    // No saved state, rely on default HTML 'show' class
+                    // Icon state should match initial 'show' status
+                    if (icon) {
+                        if (collapseEl.classList.contains('show')) {
+                            icon.classList.remove('collapsed');
+                        } else {
+                            icon.classList.add('collapsed');
+                        }
+                    }
+                }
+            });
         });
     </script>
 </body>

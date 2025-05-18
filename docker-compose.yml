@@ -9,7 +9,7 @@ services:
     # No ports are exposed for Apache as per the request focusing on Samba.
 
   samba:
-    image: dperson/samba
+    image: docker.io/dperson/samba # Especifica el registro completo de la imagen
     ports:
       - "137:137/udp"
       - "138:138/udp"

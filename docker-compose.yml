@@ -4,7 +4,7 @@ services:
   php:
     image: php:8-apache # Uses the latest available PHP 8.x with Apache
     ports:
-      - "8080:80" # Map host port 8080 to container port 80
+      - "8088:80" # Map host port 8088 to container port 80
     volumes:
       - .:/var/www/html # Mounts the current repository into /var/www/html
     # Apache within this container runs as www-data by default and serves from /var/www/html.

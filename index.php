@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 // Version of the script
-define('VERSION', '2025.04.07.1319');
+define('VERSION', '2025.05.18.1000');
 
 // Function to get directories excluding hidden ones and vendor (PHP7 compatible)
 /**

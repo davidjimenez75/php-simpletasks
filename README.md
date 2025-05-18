@@ -22,7 +22,7 @@ It provides a clean, Bootstrap-styled interface to visualize your project organi
 
 ## Requirements
 
-- PHP 8.0 or higher
+- PHP 7.4 or higher
 - Web server (Apache, Nginx, etc.)
 - Composer (for development/testing)
 
@@ -30,7 +30,9 @@ It provides a clean, Bootstrap-styled interface to visualize your project organi
 
 1. Clone the repository to your web server directory:
 
+```
 git clone https://github.com/davidjimenez75/php-simpletasks.git /var/www/html
+```
 
 2. Ensure the web server has appropriate permissions to read the directory structure.
 

@@ -11,10 +11,10 @@ services:
   samba:
     image: docker.io/dperson/samba # Especifica el registro completo de la imagen
     ports:
-      - "137:137/udp"
-      - "138:138/udp"
-      - "139:139/tcp"
-      - "445:445/tcp"
+      - "1137:137/udp" # Host:Container
+      - "1138:138/udp" # Host:Container
+      - "1139:139/tcp" # Host:Container
+      - "1445:445/tcp" # Host:Container
     volumes:
       # Mounts the current repository to /var/www/html inside the Samba container.
       # This is the same host directory mounted by the php service.
@@ -43,7 +43,12 @@ services:
 # To use this Docker Compose file:
 # 1. Save it as 'docker-compose.yml' in the root of your repository.
 # 2. IMPORTANT: Change the Samba credentials "devuser;devpass" in the command section above.
-# 3. Run 'docker-compose up -d' in the terminal from the repository root.
+# 3. Run 'podman-compose up -d' (or 'docker-compose up -d') in the terminal from the repository root.
 # 4. Access the Samba share from your network using the host machine's IP address
 #    and the share name 'tasks' with the credentials you set.
-#    Example: \\<host_ip>\tasks
+#    You will likely need to specify the custom port for SMB (e.g., 1445) if your client doesn't automatically try it.
+#    Example for Windows Explorer: \\\\<host_ip>\\tasks (Windows might still try 445 by default,
+#    you might need to connect via 'Map network drive' and specify the port if direct access fails,
+#    or ensure your client supports non-standard SMB ports. For Linux clients, you might use:
+#    smbclient //<host_ip>/tasks -U devuser -p 1445 )
+#    Note: Accessing Samba on non-standard ports can sometimes be tricky depending on the client OS and software.

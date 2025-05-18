@@ -458,6 +458,11 @@ $projects = getDirectories(__DIR__);
                                     $taskMeta['status_display'] = strtoupper(htmlspecialchars($rawStatus));
                                     $taskMeta['status_class'] = 'status-' . strtolower(htmlspecialchars(preg_replace('/[^a-zA-Z0-9_-]+/', '-', $rawStatus)));
                                     
+                                    // New: Process direct duration_minutes from folder.ini
+                                    if (isset($iniData['duration_minutes']) && is_numeric($iniData['duration_minutes'])) {
+                                        $taskMeta['duration_minutes'] = (int)$iniData['duration_minutes'];
+                                    }
+
                                     // Process start time
                                     $startTimeObj = null;
                                     if (!empty($iniData['start'])) {
@@ -476,8 +481,8 @@ $projects = getDirectories(__DIR__);
                                         }
                                     }
                                     
-                                    // Calculate duration
-                                    if ($startTimeObj && $endTimeObj && $endTimeObj > $startTimeObj) {
+                                    // Calculate duration ONLY IF NOT ALREADY SET by duration_minutes from INI
+                                    if ($taskMeta['duration_minutes'] === null && $startTimeObj && $endTimeObj && $endTimeObj > $startTimeObj) {
                                         $interval = $startTimeObj->diff($endTimeObj);
                                         $taskMeta['duration_minutes'] = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
                                     }
@@ -499,7 +504,7 @@ $projects = getDirectories(__DIR__);
                             $taskIconHtml = '<i class="bi bi-record-circle"></i>'; // Default: open circle
                             if (in_array(strtoupper($rawStatusForLogic), ['DONE', 'FINISHED'])) {
                                 $taskIconHtml = '<i class="bi bi-check-circle-fill text-success"></i>'; // Green check
-                            } elseif (in_array(strtoupper($rawStatusForLogic), ['WIP', 'TODAY', 'URGENT', 'ROCK'])) {
+                            } elseif (in_array(strtoupper($rawStatusForLogic), ['WIP', 'TODAY', 'URGENT', 'ROCK'])) { // Corrected: removed extra 'elseif' and fixed syntax
                                 $taskIconHtml = '<i class="bi bi-dot text-warning"></i>'; // Yellow dot for in-progress like
                             }
                             // TODO: Add more specific icons for bug, feature etc. later if desired

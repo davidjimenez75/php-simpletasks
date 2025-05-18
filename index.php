@@ -806,6 +806,64 @@ $projects = getDirectories(__DIR__);
                 console.error('Could not load status filter from localStorage: ', e);
             }
 
+            // --- FEATURE--002: Keyboard Shortcuts ---
+            const allProjectCollapseElements = document.querySelectorAll('.project-tasks-container.collapse');
+            const allTaskReadmeCollapseElements = document.querySelectorAll('.task-readme-content.collapse');
+
+            function setProjectCollapseState(expand) {
+                allProjectCollapseElements.forEach(el => {
+                    const bsCollapse = bootstrap.Collapse.getOrCreateInstance(el, { toggle: false });
+                    if (expand) {
+                        bsCollapse.show();
+                    } else {
+                        bsCollapse.hide();
+                    }
+                    // Note: The 'show.bs.collapse' and 'hide.bs.collapse' event listeners
+                    // already handle localStorage and icon updates.
+                });
+            }
+
+            function setTaskReadmeCollapseState(expand) {
+                allTaskReadmeCollapseElements.forEach(el => {
+                    const bsCollapse = bootstrap.Collapse.getOrCreateInstance(el, { toggle: false });
+                    if (expand) {
+                        bsCollapse.show();
+                    } else {
+                        bsCollapse.hide();
+                    }
+                    // TODO: Consider adding localStorage persistence for task READMEs if needed in the future.
+                });
+            }
+
+            document.addEventListener('keydown', function(event) {
+                // Ignore if typing in an input, textarea, or contenteditable element
+                if (event.target.isContentEditable || 
+                    event.target.tagName === 'INPUT' || 
+                    event.target.tagName === 'TEXTAREA' ||
+                    event.target.tagName === 'SELECT') {
+                    return;
+                }
+
+                switch (event.key) {
+                    case 'c': // Collapse all task READMEs
+                        setTaskReadmeCollapseState(false);
+                        break;
+                    case 'C': // Collapse all projects and task READMEs
+                        setProjectCollapseState(false);
+                        setTaskReadmeCollapseState(false);
+                        break;
+                    case 'e': // Expand all projects, collapse task READMEs
+                        setProjectCollapseState(true);
+                        setTaskReadmeCollapseState(false);
+                        break;
+                    case 'E': // Expand all projects and task READMEs
+                        setProjectCollapseState(true);
+                        setTaskReadmeCollapseState(true);
+                        break;
+                }
+            });
+            // --- End of FEATURE--002 ---
+
         });
     </script>
 </body>

@@ -331,6 +331,7 @@ $projects = getDirectories(__DIR__);
             font-size: 0.8em;
             margin-left: 8px;
             color: #0d6efd; /* Bootstrap primary blue */
+            text-decoration: none; /* Removed underline for FEATURE--004 */
         }
         html[data-bs-theme="dark"] .task-readme-toggle {
             color: #58a6ff; /* Lighter blue for dark mode */
@@ -805,6 +806,33 @@ $projects = getDirectories(__DIR__);
             } catch (e) {
                 console.error('Could not load status filter from localStorage: ', e);
             }
+
+            // --- FEATURE--004: Clickable Task Header for README Toggle ---
+            document.querySelectorAll('.gh-item-header').forEach(header => {
+                const taskItem = header.closest('.gh-item');
+                const readmeToggleLink = header.querySelector('.task-readme-toggle');
+                
+                if (readmeToggleLink) { // Only make header clickable if a README toggle exists
+                    header.style.cursor = 'pointer'; // Indicate it's clickable
+                    header.addEventListener('click', function(event) {
+                        // Prevent toggle if the click was on an actual interactive element within the header
+                        if (event.target.closest('a, button, .gh-label')) {
+                            return;
+                        }
+                        
+                        // Find the collapse target ID from the toggle link
+                        const targetId = readmeToggleLink.getAttribute('href');
+                        if (targetId) {
+                            const readmeContentElement = document.querySelector(targetId);
+                            if (readmeContentElement) {
+                                const bsCollapse = bootstrap.Collapse.getOrCreateInstance(readmeContentElement);
+                                bsCollapse.toggle();
+                            }
+                        }
+                    });
+                }
+            });
+            // --- End of FEATURE--004 ---
 
             // --- FEATURE--002: Keyboard Shortcuts ---
             const allProjectCollapseElements = document.querySelectorAll('.project-tasks-container.collapse');

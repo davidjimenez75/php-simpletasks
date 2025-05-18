@@ -11,6 +11,9 @@ At its core, PHP SimpleTasks scans a designated root directory:
 
 The application then renders this structure in a user-friendly web view, providing an immediate overview of your ongoing work, organized by project. Task metadata, such as status, ID, start/end times, duration, and tags, can be defined in `folder.ini` files within each task directory, offering a richer, GitHub-issues-like experience.
 
+![PHP SimpleTasks Screenshot](folder.png "PHP SimpleTasks - Filesystem-based task visualization")
+
+
 ## Key Features
 
 -   **Automatic Discovery:** Dynamically lists projects and tasks based on your directory structure.

@@ -297,13 +297,19 @@ $projects = getDirectories(__DIR__);
                                 'start_display' => null,
                                 'end_display' => null,
                                 'duration_minutes' => null,
-                                'tags_array' => []
+                                'tags_array' => [],
+                                'id' => null // Initialize id
                             ];
                             $rawStatusForLogic = 'TODO'; // For direct comparison if needed
 
                             if (file_exists($taskIniPath)) {
                                 $iniData = parse_ini_file($taskIniPath);
                                 if ($iniData) {
+                                    // Process id
+                                    if (isset($iniData['id']) && trim($iniData['id']) !== '') {
+                                        $taskMeta['id'] = htmlspecialchars(trim($iniData['id']));
+                                    }
+
                                     // Process status
                                     $rawStatus = isset($iniData['status']) && trim($iniData['status']) !== '' ? trim($iniData['status']) : 'TODO';
                                     $rawStatusForLogic = $rawStatus;
@@ -354,7 +360,13 @@ $projects = getDirectories(__DIR__);
                                     $taskPrefix = "- [x]";
                                 }
                                 ?>
-                                <?= $taskPrefix ?> <?= htmlspecialchars($task) ?> <span class="task-status-label">[<?= $taskMeta['status_display'] ?>]</span>
+                                <div class="task-name">
+                                    <?= $taskPrefix ?> <?= htmlspecialchars($task) ?>
+                                    <?php if ($taskMeta['id']): ?>
+                                        (<?= $taskMeta['id'] ?>)
+                                    <?php endif; ?>
+                                    <span class="task-status-label">[<?= $taskMeta['status_display'] ?>]</span>
+                                </div>
                                 
                                 <?php if ($taskMeta['start_display'] || $taskMeta['end_display'] || $taskMeta['duration_minutes'] !== null || !empty($taskMeta['tags_array'])): ?>
                                 <div class="task-meta-container">

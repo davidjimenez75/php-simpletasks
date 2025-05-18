@@ -1,6 +1,13 @@
 # Ignore all directories at the root level
 /*/
 
+# Dont ignore these folders
+!/BUGS/
+!/FEATURES/
+!/TASKS/
+!/TESTS/
+
+
 # Common PHP exclusions
 /vendor/
 /composer.lock
@@ -13,3 +20,5 @@
 CLAUDE.md
 .phpunit.result.cache
 phpunit.xml
+
+

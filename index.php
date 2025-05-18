@@ -129,7 +129,7 @@ $projects = getDirectories(__DIR__);
             margin-bottom: 8px; /* Increased margin for separation */
             border-radius: 6px; /* GitHub-like rounded corners */
             font-size: 0.9em;
-            background-color: #fff; /* Light theme default background */
+            background-color: #e5e5e5; /* Changed from #fff to a softer white for light theme */
         }
 
         .gh-item-icon-col {

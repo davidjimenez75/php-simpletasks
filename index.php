@@ -499,9 +499,9 @@ $projects = getDirectories(__DIR__);
                                     $taskMeta['status_display'] = strtoupper(htmlspecialchars($rawStatus));
                                     $taskMeta['status_class'] = 'status-' . strtolower(htmlspecialchars(preg_replace('/[^a-zA-Z0-9_-]+/', '-', $rawStatus)));
                                     
-                                    // New: Process direct duration_minutes from folder.ini
-                                    if (isset($iniData['duration_minutes']) && is_numeric($iniData['duration_minutes'])) {
-                                        $taskMeta['duration_minutes'] = (int)$iniData['duration_minutes'];
+                                    // New: Process direct 'time' (formerly duration_minutes) from folder.ini
+                                    if (isset($iniData['time']) && is_numeric($iniData['time'])) {
+                                        $taskMeta['duration_minutes'] = (int)$iniData['time'];
                                     }
 
                                     // Process start time
@@ -522,7 +522,7 @@ $projects = getDirectories(__DIR__);
                                         }
                                     }
                                     
-                                    // Calculate duration ONLY IF NOT ALREADY SET by duration_minutes from INI
+                                    // Calculate duration ONLY IF NOT ALREADY SET by 'time' (formerly duration_minutes) from INI
                                     if ($taskMeta['duration_minutes'] === null && $startTimeObj && $endTimeObj && $endTimeObj > $startTimeObj) {
                                         $interval = $startTimeObj->diff($endTimeObj);
                                         $taskMeta['duration_minutes'] = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;

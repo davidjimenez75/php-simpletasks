@@ -409,18 +409,21 @@ $projects = getDirectories(__DIR__);
             <li><a class="dropdown-item filter-status-item" href="#" data-status="all">All Statuses</a></li>
             <li><a class="dropdown-item filter-status-item" href="#" data-status="todo">To Do</a></li>
             <li><a class="dropdown-item filter-status-item" href="#" data-status="wip">WIP</a></li>
-            <li><a class="dropdown-item filter-status-item" href="#" data-status="done">Done</a></li>
-            <li><a class="dropdown-item filter-status-item" href="#" data-status="finished">Finished</a></li>
             <li><a class="dropdown-item filter-status-item" href="#" data-status="today">Today</a></li>
             <li><a class="dropdown-item filter-status-item" href="#" data-status="next">Next</a></li>
             <li><a class="dropdown-item filter-status-item" href="#" data-status="urgent">Urgent</a></li>
             <li><a class="dropdown-item filter-status-item" href="#" data-status="rock">Rock</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="someday">Someday</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="waiting">Waiting</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="later">Later</a></li>            
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="done">Done</a></li>            
+            <!--
             <li><a class="dropdown-item filter-status-item" href="#" data-status="bug">Bug</a></li>
             <li><a class="dropdown-item filter-status-item" href="#" data-status="feature">Feature</a></li>
             <li><a class="dropdown-item filter-status-item" href="#" data-status="review">Review</a></li>
-            <li><a class="dropdown-item filter-status-item" href="#" data-status="someday">Someday</a></li>
-            <li><a class="dropdown-item filter-status-item" href="#" data-status="waiting">Waiting</a></li>
-            <li><a class="dropdown-item filter-status-item" href="#" data-status="later">Later</a></li>
+            <li><a class="dropdown-item filter-status-item" href="#" data-status="finished">Finished</a></li>
+            -->
+            
             <li><hr class="dropdown-divider"></li>
             <li><h6 class="dropdown-header">Coming Soon</h6></li>
             <li><a class="dropdown-item disabled" href="#">Reports</a></li>
